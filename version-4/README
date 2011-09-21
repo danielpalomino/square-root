@@ -1,0 +1,3 @@
+Versão 4 do algoritmo da raiz quadrada (SQRI)
+	Usar a versão 3 como base trocando os registradores por latches afim de diminuir a potência
+
