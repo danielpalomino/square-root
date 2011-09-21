@@ -1,0 +1,4 @@
+Versão 2 do algoritmo da raiz quadrada (SQRI)
+	Implmentação em FSDM com máximo paralelismo possível.
+	Usar tantos recurso quanto necessários.
+
