@@ -22,7 +22,7 @@ VARIABLE r,d,s,t: INTEGER;
 BEGIN
 
 	IF reset = '1' THEN
-		
+		root <= (OTHERS=>'0');
 	ELSIF clk'EVENT AND clk='1' THEN
 		r:=1;
 		d:=2;

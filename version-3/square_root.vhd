@@ -8,6 +8,7 @@ ENTITY square_root IS
 	PORT(
 		clk, reset, start:	IN STD_LOGIC;
 		number:		IN STD_LOGIC_VECTOR(n-1 DOWNTO 0);
+		pronto:			OUT STD_LOGIC;
 		root:			OUT STD_LOGIC_VECTOR((n-1)/2 DOWNTO 0)
 	);
 
@@ -31,7 +32,7 @@ END COMPONENT;
 COMPONENT pc IS
 	PORT(
 		clk, reset, ready, start: IN STD_LOGIC;
-		start_po, en_r, en_s, en_d, en_t, en_s_neg: OUT STD_LOGIC;
+		start_po, en_r, en_s, en_d, en_t, en_s_neg, pronto: OUT STD_LOGIC;
 		mux0, mux1: OUT STD_LOGIC_VECTOR (1 DOWNTO 0 )
 	);
 
@@ -81,6 +82,7 @@ en_s => en_s,
 en_d => en_d,
 en_t => en_t,
 en_s_neg => en_s_neg,
+pronto => pronto,
 mux0 => mux0,
 mux1 => mux1
 );

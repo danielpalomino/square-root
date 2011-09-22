@@ -8,6 +8,7 @@ ENTITY square_root IS
 	PORT(
 		clk, reset, start:	IN STD_LOGIC;
 		number:		IN STD_LOGIC_VECTOR(n-1 DOWNTO 0);
+		ready:			OUT STD_LOGIC;
 		root:			OUT STD_LOGIC_VECTOR((n-1)/2 DOWNTO 0)
 	);
 
@@ -15,9 +16,11 @@ END square_root;
 
 ARCHITECTURE behavioral OF square_root IS
 
-SIGNAL r, d, s: STD_LOGIC_VECTOR(n-1 DOWNTO 0);
+SIGNAL reg_number, r, d, s: STD_LOGIC_VECTOR(n-1 DOWNTO 0);
+
 TYPE state IS (idle, inicio, diff, teste, computa0, computa1, fim);
 SIGNAL cs, ns: state;
+
 SIGNAL sub: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 
 BEGIN
@@ -31,28 +34,31 @@ BEGIN
 	END IF;
 END PROCESS;
 
-PROCESS (clk,cs)
+PROCESS (clk)
 BEGIN
 	CASE cs IS
 		WHEN idle =>
+			reg_number <= (OTHERS=>'0');
 			r <= (OTHERS=>'0');
 			d <= (OTHERS=>'0');
 			s <= (OTHERS=>'0');
 			root <= (OTHERS=>'0');
+			ready <= '0';
 			IF (start = '1') THEN
 				ns <= inicio;
 			ELSE
 				ns <= idle;
 			END IF;
 		WHEN inicio =>
+			reg_number <= number;
 			r <= "00000001";
 			d <= "00000010";
 			s <= "00000100";
 			ns <= teste;
 		WHEN diff =>
-			sub <= (number) - (s);
+			sub <= (reg_number) - (s);
 		WHEN teste =>
-			IF sub(n-1)='0' THEN
+			IF sub(n-1)='1' THEN
 				ns <= fim;
 			ELSE
 				ns <= computa0;
@@ -66,6 +72,7 @@ BEGIN
 			ns <= teste;
 		WHEN fim =>
 			root <= r ((n-1)/2 DOWNTO 0);
+			ready <= '1';
 			ns <= idle;
 	END CASE;
 END PROCESS;	

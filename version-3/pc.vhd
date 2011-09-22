@@ -6,7 +6,7 @@ USE IEEE.STD_LOGIC_ARITH.ALL;
 ENTITY pc IS
 	PORT(
 		clk, reset, ready, start: IN STD_LOGIC;
-		start_po, en_r, en_s, en_d, en_t, en_s_neg: OUT STD_LOGIC;
+		start_po, en_r, en_s, en_d, en_t, en_s_neg, pronto: OUT STD_LOGIC;
 		mux0, mux1: OUT STD_LOGIC_VECTOR (1 DOWNTO 0 )
 	);
 
@@ -40,6 +40,7 @@ BEGIN
 			en_d <= '0';
 			en_t <= '0';
 			en_s_neg <= '0';
+			pronto <= '0';
 			IF (start = '1') THEN
 				ns <= inicio;
 			ELSE
@@ -95,6 +96,7 @@ BEGIN
 			ns <= not_s;
 		WHEN fim =>
 			en_r <= '0';
+			pronto <= '1';
 			ns <= idle;
 	END CASE;
 	
