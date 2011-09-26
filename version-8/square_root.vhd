@@ -15,7 +15,7 @@ END square_root;
 
 ARCHITECTURE behavioral OF square_root IS
 
-TYPE state IS (idle, inicio, set_bit1, computa, teste, set_bit0);
+TYPE state IS (idle, inicio, start_masc, computa, diff, teste, set_bit0, set_bit1, shift_masc);
 SIGNAL cs, ns: state;
 
 SIGNAL sub, reg_number, s: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
@@ -49,30 +49,37 @@ BEGIN
 			r <= (OTHERS=>'0');
 			masc <= (OTHERS=>'0');
 			masc((n-1)/2) <= '1';
-			ns <= set_bit1;
-		WHEN set_bit1 =>
-			IF masc = "0000" THEN
-				root <= r;
-				ready <= '1';
-				ns <= idle;
-			ELSE
-				r <= masc or r;
-				masc <= '0' & masc((n-1)/2 DOWNTO 1);
-				ns <= computa;
-			END IF;
+			ns <= start_masc;
+		WHEN start_masc =>
+		  r <= masc or r;
+		  ns <= computa;		
 		WHEN computa =>
 			s <= r*r;
-			ns <= teste;
+			ns <= diff;
+		WHEN diff =>
+		  sub <= reg_number - s;
+		  ns <= teste;
 		WHEN teste =>
-			sub <= s - reg_number;
 			IF sub(n-1) = '1' THEN
 				ns <= set_bit0;
 			ELSE
 				ns <= set_bit1;
 			END IF;
+	  WHEN set_bit1 =>
+      IF masc = "0000" THEN
+        root <= r;
+        ready <= '1';
+        ns <= idle;
+      ELSE
+        r <= masc or r;
+        ns <= shift_masc;
+      END IF;
 		WHEN set_bit0 =>
 			r <= not(masc) and r;
-			ns <= set_bit1;
+			ns <= shift_masc;
+		WHEN shift_masc =>
+		  masc <= '0' & masc((n-1)/2 DOWNTO 1);
+		  ns <= start_masc;
 	END CASE;
 END PROCESS;
 
