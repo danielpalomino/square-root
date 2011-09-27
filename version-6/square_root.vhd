@@ -33,14 +33,14 @@ BEGIN
 	END IF;
 END PROCESS;
 
-r(0) <= "00000001";
-d(0) <= "00000010";
-s(0) <= "00000100";
+r(0) <= conv_std_logic_vector(1,n);
+d(0) <= conv_std_logic_vector(2,n);
+s(0) <= conv_std_logic_vector(4,n);
 
 GEN_ALG: FOR i IN 1 TO 2**(n/2) GENERATE
-	r(i) <= r(i-1) + "00000001";
-	d(i) <= d(i-1) + "00000010";
-	s(i) <= s(i-1) + d(i) + "00000001";
+	r(i) <= r(i-1) + conv_std_logic_vector(1,n);
+	d(i) <= d(i-1) + conv_std_logic_vector(2,n);
+	s(i) <= s(i-1) + d(i) + conv_std_logic_vector(1,n);
 	t(i-1) <= reg_number - s(i-1);
 END GENERATE GEN_ALG;
 
