@@ -19,8 +19,9 @@ ARCHITECTURE behavioral OF square_root IS
 SIGNAL en_number: STD_LOGIC;
 SIGNAL r, s, d, sub: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 SIGNAL t: STD_LOGIC;
+SIGNAL flag: STD_LOGIC;
 
-TYPE state IS (idle, inicio, computa0, computa1, teste, fim);
+TYPE state IS (idle, inicio, computa0, computa1, diff, teste, fim);
 SIGNAL cs, ns: state;
 
 BEGIN
@@ -28,23 +29,25 @@ BEGIN
 PROCESS (clk, reset)
 BEGIN
 	IF reset = '1' THEN
+	  flag <= '0';
 		cs <= idle;
 	ELSIF clk'EVENT AND clk='1' THEN
 		cs <= ns;
+		flag <= not flag;
 	END IF;
 END PROCESS;
 
-PROCESS (clk)
+PROCESS (cs,start,flag)
 BEGIN
 	CASE cs IS
 		WHEN idle =>
+			ready <= '0';
 			IF start = '1' THEN
 				ns <= inicio;
 			ELSE
 				ns <= idle;
 			END IF;
-		WHEN inicio =>
-			ready <= '0';
+		WHEN inicio =>			
 			r <= "00000001";
 			d <= "00000010";
 			s <= "00000100";
@@ -58,21 +61,25 @@ BEGIN
 			s <= s + d + 1;
 			r <= r + 1;
 			d <= d + 2;
+			ns <= diff;
+		WHEN diff =>
+			sub <= number - s;
+			s <= s + d + 1;
+			r <= r + 1;
+			d <= d + 2;
 			ns <= teste;
 		WHEN teste =>
-			sub <= number - s;
-			t <= not(sub(n-1));
-			IF t = '0' THEN
+			IF sub(n-1) = '1' THEN
 				ns <= fim;
 			ELSE
+			  sub <= number - s;
 				s <= s + d + 1;
 				r <= r + 1;
 				d <= d + 2;
 				ns <= teste;
 			END IF;
 		WHEN fim =>
-			r <= r - 2;
-			root <= r((n-1)/2 DOWNTO 0);
+			root <= r((n-1)/2 DOWNTO 0) - 2;
 			ready <= '1';
 			ns <= idle;
 	END CASE;
