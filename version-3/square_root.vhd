@@ -23,6 +23,7 @@ COMPONENT po  IS
 		en_r, en_s, en_d, en_t, en_s_neg: IN STD_LOGIC;
 		number: IN STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 		mux0, mux1: IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+		mux_s: IN STD_LOGIC;
 		ready: OUT STD_LOGIC;
 		root: OUT STD_LOGIC_VECTOR (n-1 DOWNTO 0)
 	);
@@ -33,7 +34,8 @@ COMPONENT pc IS
 	PORT(
 		clk, reset, ready, start: IN STD_LOGIC;
 		start_po, en_r, en_s, en_d, en_t, en_s_neg, pronto: OUT STD_LOGIC;
-		mux0, mux1: OUT STD_LOGIC_VECTOR (1 DOWNTO 0 )
+		mux0, mux1: OUT STD_LOGIC_VECTOR (1 DOWNTO 0 );
+		mux_s: OUT STD_LOGIC
 	);
 
 END COMPONENT;
@@ -41,6 +43,7 @@ END COMPONENT;
 SIGNAL reg_number, temp_root: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 SIGNAL start_po, en_r, en_s, en_d, en_t, en_s_neg, ready: STD_LOGIC;
 SIGNAL mux0, mux1: STD_LOGIC_VECTOR (1 DOWNTO 0 );
+SIGNAL mux_s: STD_LOGIC;
 
 BEGIN
 
@@ -67,6 +70,7 @@ en_s_neg => en_s_neg,
 number => reg_number,
 mux0 => mux0,
 mux1 => mux1,
+mux_s => mux_s,
 ready => ready,
 root => temp_root
 );
@@ -84,7 +88,8 @@ en_t => en_t,
 en_s_neg => en_s_neg,
 pronto => pronto,
 mux0 => mux0,
-mux1 => mux1
+mux1 => mux1,
+mux_s => mux_s
 );
 	
 END behavioral;

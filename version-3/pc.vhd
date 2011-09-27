@@ -7,7 +7,8 @@ ENTITY pc IS
 	PORT(
 		clk, reset, ready, start: IN STD_LOGIC;
 		start_po, en_r, en_s, en_d, en_t, en_s_neg, pronto: OUT STD_LOGIC;
-		mux0, mux1: OUT STD_LOGIC_VECTOR (1 DOWNTO 0 )
+		mux0, mux1: OUT STD_LOGIC_VECTOR (1 DOWNTO 0 );
+		mux_s: OUT STD_LOGIC
 	);
 
 END pc;
@@ -28,13 +29,14 @@ BEGIN
 	END IF;
 END PROCESS;
 
-PROCESS (clk)
+PROCESS (cs, start)
 BEGIN
 	CASE cs IS
 		WHEN idle =>
 			start_po <= '0';
 			mux0 <= "00";
 			mux1 <= "00";
+			mux_s <= '0';
 			en_r <= '0';
 			en_s <= '0';
 			en_d <= '0';
@@ -56,18 +58,20 @@ BEGIN
 			ns <= inc_s;
 		WHEN inc_s =>
 			en_s_neg <= '1';
-			mux0 <= "11";
+			mux_s <= '1';
+			mux0 <= "10";
 			mux1 <= "00";
 			ns <= diff;
 		WHEN diff =>
 			en_s_neg <= '0';
+			mux_s <= '0';
 			en_t <= '1';
 			mux0 <= "11";
 			mux1 <= "11";
 			ns <= teste;
 		WHEN teste =>
 			en_t <= '0';
-			IF ready = '0' THEN
+			IF ready = '1' THEN
 				ns <= fim;
 			ELSE
 				ns <= computa_r;

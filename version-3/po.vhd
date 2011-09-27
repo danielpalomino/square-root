@@ -10,6 +10,7 @@ ENTITY po IS
 		en_r, en_s, en_d, en_t, en_s_neg: IN STD_LOGIC;
 		number: IN STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 		mux0, mux1: IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+		mux_s: IN STD_LOGIC;
 		ready: OUT STD_LOGIC;
 		root: OUT STD_LOGIC_VECTOR (n-1 DOWNTO 0)
 	);
@@ -20,7 +21,7 @@ ARCHITECTURE behavioral OF po IS
 
 SIGNAL op0, op1: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 SIGNAL resultado: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
-SIGNAL r, s, d, s_neg: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
+SIGNAL r, s, d, s_neg, s_temp: STD_LOGIC_VECTOR (n-1 DOWNTO 0);
 
 BEGIN
 
@@ -37,7 +38,6 @@ BEGIN
 				r <= "00000001";
 				d <= "00000010";
 				s <= "00000100";
-				ready <= '1';
 			ELSE
 				IF en_r = '1' THEN
 					r <= resultado;
@@ -48,16 +48,20 @@ BEGIN
 				ELSIF en_t = '1' THEN
 					ready <= resultado(n-1);
 				ELSIF en_s_neg = '1' THEN
-					s_neg <= not s;
+					s_neg <= resultado;
 				END IF;
 			END IF;
 		END IF;
 	END PROCESS;
 	
+	WITH mux_s SELECT
+	s_temp <= s WHEN '0',
+	     not s WHEN OTHERS;
+	
 	WITH mux0 SELECT
 	op0 <=	r		WHEN "00",
 			d		WHEN "01",
-			s		WHEN "10",
+			s_temp		WHEN "10",
 			s_neg	WHEN OTHERS;
 	
 	WITH mux1 SELECT
