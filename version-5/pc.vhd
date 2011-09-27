@@ -99,7 +99,6 @@ BEGIN
 				ns <= computa;
 			END IF;
 		WHEN teste =>
-			--en_t <= '0';
 			IF t = '0' THEN
 				ns <= start_rd;
 			ELSE

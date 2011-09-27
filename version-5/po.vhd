@@ -29,7 +29,6 @@ END COMPONENT;
 SIGNAL cin_r, cin_d, cin_s, cin_t: STD_LOGIC;
 SIGNAL reg_cout_r, reg_cout_d, reg_cout_s, reg_cout_t: STD_LOGIC;
 SIGNAL r, d, s, reg_number, cons_one, cons_two: STD_LOGIC_VECTOR(n-1 DOWNTO 0);
---SIGNAL reg_s_r, reg_s_d, reg_s_s: STD_LOGIC;
 SIGNAL s_r, s_d, s_s, s_t: STD_LOGIC;
 SIGNAL cout_r, cout_d, cout_s, cout_t: STD_LOGIC;
 SIGNAL not_s: STD_LOGIC;
@@ -50,27 +49,20 @@ BEGIN
 		reg_cout_d <= '0';
 		reg_cout_s <= '0';
 		reg_cout_t <= '0';
-		--reg_s_r <= '0';
-		--reg_s_d <= '0';
-		--reg_s_s <= '0';
 		cons_one <= (OTHERS=>'0');
 		cons_two <= (OTHERS=>'0');
 	ELSIF clk'EVENT AND clk='1' THEN
-	  --reg_s_r <= s_r;
-    --reg_s_d <= s_d;
-    --reg_s_s <= s_s;
-      
-    reg_cout_r <= cout_r;
-    reg_cout_d <= cout_d;
-    reg_cout_s <= cout_s;
-    reg_cout_t <= cout_t;
+		reg_cout_r <= cout_r;
+		reg_cout_d <= cout_d;
+		reg_cout_s <= cout_s;
+		reg_cout_t <= cout_t;
 		IF en_start = '1' THEN
 			reg_number <= number;
-			r <= "00000001";
-			d <= "00000010";
-			s <= "00000100";
-			cons_one <= "00000001";
-			cons_two <= "00000010";
+			r <= conv_std_logic_vector(1,n);
+			d <=conv_std_logic_vector(2,n);
+			s <= conv_std_logic_vector(4,n);
+			cons_one <= conv_std_logic_vector(1,n);
+			cons_two <= conv_std_logic_vector(2,n);
 		END IF;
 		IF shift_r = '1' THEN
 			r <= s_r & r(n-1 DOWNTO 1);
