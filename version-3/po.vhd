@@ -35,9 +35,9 @@ BEGIN
 			ready <= '0';
 		ELSIF clk'EVENT AND clk = '1' THEN
 			IF (start = '1') THEN
-				r <= "00000001";
-				d <= "00000010";
-				s <= "00000100";
+				r <= conv_std_logic_vector(1,n);
+				d <= conv_std_logic_vector(2,n);
+				s <= conv_std_logic_vector(4,n);
 			ELSE
 				IF en_r = '1' THEN
 					r <= resultado;
@@ -65,8 +65,8 @@ BEGIN
 			s_neg	WHEN OTHERS;
 	
 	WITH mux1 SELECT
-	op1 <=	"00000001"	WHEN "00",
-			"00000010"	WHEN "01",
+	op1 <=	conv_std_logic_vector(1,n)	WHEN "00",
+			conv_std_logic_vector(2,n)	WHEN "01",
 			d			WHEN "10",
 			number 	WHEN OTHERS;
 	
