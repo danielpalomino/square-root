@@ -34,7 +34,7 @@ BEGIN
 	END IF;
 END PROCESS;
 
-PROCESS (clk)
+PROCESS (cs, start)
 BEGIN
 	CASE cs IS
 		WHEN idle =>
@@ -43,6 +43,7 @@ BEGIN
 			d <= (OTHERS=>'0');
 			s <= (OTHERS=>'0');
 			root <= (OTHERS=>'0');
+			sub <= (OTHERS=>'0');
 			ready <= '0';
 			IF (start = '1') THEN
 				ns <= inicio;
@@ -51,12 +52,13 @@ BEGIN
 			END IF;
 		WHEN inicio =>
 			reg_number <= number;
-			r <= "00000001";
-			d <= "00000010";
-			s <= "00000100";
-			ns <= teste;
+			r <= conv_std_logic_vector(1,n);
+			d <= conv_std_logic_vector(2,n);
+			s <= conv_std_logic_vector(4,n);
+			ns <= diff;
 		WHEN diff =>
 			sub <= (reg_number) - (s);
+			ns <= teste;
 		WHEN teste =>
 			IF sub(n-1)='1' THEN
 				ns <= fim;
@@ -69,7 +71,7 @@ BEGIN
 			ns <= computa1;
 		WHEN computa1 =>
 			s <= s + d + 1;
-			ns <= teste;
+			ns <= diff;
 		WHEN fim =>
 			root <= r ((n-1)/2 DOWNTO 0);
 			ready <= '1';
