@@ -48,9 +48,9 @@ BEGIN
 				ns <= idle;
 			END IF;
 		WHEN inicio =>			
-			r <= "00000001";
-			d <= "00000010";
-			s <= "00000100";
+			r <= conv_std_logic_vector(1,n);
+			d <= conv_std_logic_vector(2,n);
+			s <= conv_std_logic_vector(4,n);
 			t <= '1';
 			ns <= computa0;
 		WHEN computa0 =>
