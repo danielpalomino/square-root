@@ -1,6 +1,7 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
 
 ENTITY square_root IS
 	GENERIC (n: INTEGER:=8);
@@ -66,7 +67,7 @@ BEGIN
 				ns <= set_bit1;
 			END IF;
 	  WHEN set_bit1 =>
-      IF masc = "0000" THEN
+      IF masc = conv_std_logic_vector(0,n) THEN
         root <= r;
         ready <= '1';
         ns <= idle;
